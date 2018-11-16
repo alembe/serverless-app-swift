@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Functions serverlessappswift",
+  "title": "Functions iosserverlessexample",
   "description": "",
-  "longDescription": "The Delivery Pipeline automates the continuous deployment of Functions serverlessappswift actions.",
+  "longDescription": "The Delivery Pipeline automates the continuous deployment of Functions iosserverlessexample actions.",
   "type": "object",
   "properties": {
     "dev-region": {
