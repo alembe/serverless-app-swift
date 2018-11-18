@@ -1,13 +1,13 @@
 version: '2'
 template:
-  name: "Functions serverlessappswift"
-  description: "Deploy your Cloud Functions for serverlessappswift app."
+  name: "Functions iosserverlessexample"
+  description: "Deploy your Cloud Functions for iosserverlessexample app."
   required:
     - repo
     - build
 
 toolchain:
-  name: serverlessappswift
+  name: iosserverlessexample
 
 services:
 
@@ -37,6 +37,7 @@ services:
           CF_APP: "{{form.pipeline.parameters.app-name}}"
           CF_SPACE: "{{form.pipeline.parameters.dev-space}}"
           CF_ORGANIZATION: "{{form.pipeline.parameters.dev-organization}}"
+          API_KEY: "{{form.pipeline.parameters.api-key}}"
           REGION_ID: "{{form.pipeline.parameters.dev-region}}"
         execute: true
 
@@ -50,7 +51,8 @@ form:
     schema:
       $ref: deploy.json
     parameters:
-      app-name: serverlessappswift
+      app-name: iosserverlessexample
       dev-space: "{{space}}"
       dev-organization: "{{organization}}"
       dev-region: "{{region}}"
+      api-key: "{{api-key}}"
