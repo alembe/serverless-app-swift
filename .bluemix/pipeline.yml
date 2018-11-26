@@ -17,9 +17,6 @@ stages:
   triggers:
   - type: stage
   properties:
-  - name: DATABASE_URL
-    value: "<url>"
-    type: text
   - name: DATABASE
     value: "products"
     type: text
@@ -33,6 +30,7 @@ stages:
       organization: ${CF_ORGANIZATION}
       space: ${CF_SPACE}
       application: ${CF_APP}
+      api_key: ${API_KEY}
     script: |-
       #!/bin/bash
       chmod +x .bluemix/pipeline-DEPLOY.sh
