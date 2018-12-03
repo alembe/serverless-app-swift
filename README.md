@@ -1,123 +1,90 @@
-[![](https://img.shields.io/badge/IBM%20Cloud-powered-blue.svg)](https://bluemix.net)
+![Cloud Functions](https://developer.ibm.com/code/wp-content/uploads/sites/118/2017/10/IBM-CLOUD-FUNCTIONS-35.png)
+
+## iosserverlessexample
+iOS Project using Swift Cloud Functions 
+
+[![](https://img.shields.io/badge/ibmcloud-powered-blue.svg)](https://bluemix.net)
 [![Platform](https://img.shields.io/badge/platform-swift-lightgrey.svg?style=flat)](https://developer.ibm.com/swift/)
 
-# Create and deploy a serverless Swift application that connects to a NoSQL database
 
-> We have similar patterns available for [Node.js](https://github.com/IBM/serverless-app-node) and [Python](https://github.com/IBM/serverless-app-python), as well!
+### Table of Contents
+* [Summary](#summary)
+* [Requirements](#requirements)
+* [Configuration](#configuration)
+* [Run](#run)
+* [Services](#services)
+* [Cloud Functions Apis](#cloud-functions-apis)
+* [License](#license)
 
-This repository has code to create a serverless Backend for Frontend ([BFF](https://samnewman.io/patterns/architectural/bff/)) using Swift and IBM Cloud Functions, backed by a NoSQL database. No full stack application management required. Cloud Functions supplies basic Create, Read, Update, and Delete operations in a serverless environment. These functions are mapped to an API gateway, which can be integrated into an iOS app, for example, to enable persistence of data into a Cloudant NoSQL Database.
+### Summary
+iOS Project using Swift Cloud Functions 
 
-When you have completed this code pattern, you will understand how to:
+### Requirements
+- [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/bluemix_cli/download_cli.html)
 
-* Create a set of Cloud Function Actions that manage the database integration
-* Integrate this Backend for Frontend within your Mobile or Web apps
-* Manage the release of the Cloud Functions with a DevOps pipeline
-
-![](doc/source/images/architecture.png)
-
-## Included Components
-
-* [Cloudant NoSQL DB](https://console.bluemix.net/catalog/services/cloudant): A fully managed data layer designed for modern web and mobile applications that leverages a flexible JSON schema.
-* [API Connect](http://developer.ibm.com/apiconnect/): Create and run secure APIs and microservices.
-* [Continuous Delivery](https://console.bluemix.net/catalog/services/continuous-delivery): Enable tool integrations that support your development, deployment, and operation tasks.
-* [GitLab](https://about.gitlab.com/): GitLab unifies issues, code review, CI, and CD into a single UI.
-* [AppID](https://console.bluemix.net/catalog/services/app-id): Use the IBM Bluemix App ID service to add authentication to your mobile and web apps and protect your back-end systems.
-
-## Featured Technologies
-
-* [Serverless](https://www.ibm.com/cloud-computing/bluemix/openwhisk): An event-action platform that allows you to execute code in response to an event.
-* [Swift](https://developer.apple.com/swift/): An open-source programming language for Apple devices,
-
-## Steps
-
-[![](https://bluemix.net/deploy/button.png)](https://console.bluemix.net/developer/appledevelopment/create-project?starterKit=1838ca47-f3a9-32ac-95e1-7051f04b3a40&defaultLanguage=SWIFT&env_id=ibm%3Ayp%3Aus-south&tenantNavMode=false&defaultDeploymentToolchain=)
-
-Deploy the application automatically using the button above and jump directly to step 4 below.
-
-**OR**
-
-Deploy the application manually:
-
-1. [Install developer tools](#1-install-developer-tools)
-1. [Configure your DevOps pipeline](#2-configure-your-devops-pipeline)
-1. [Deploy your serverless application](#3-deploy-your-serverless-application)
-1. [Integrate with your own frontend application](#4-integrate-with-your-own-frontend-application)
-
-### 1. Install developer tools
-
-- [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html)
 - Cloud Functions Plugin:
-  ```bash
-  ibmcloud plugin install Cloud-Functions -r IBM Cloud
-  ```
-- [Whisk Deploy CLI](https://github.com/apache/incubator-openwhisk-wskdeploy/releases)
 
-### 2. Configure your DevOps pipeline
+      bx plugin install Cloud-Functions -r Bluemix
+            
+- Whisk Deploy CLI [Download](https://github.com/apache/incubator-openwhisk-wskdeploy/releases)
+### Configuration
+The .bluemix directory contains all of the configuration files that the toolchain requires to function. At a minimum, the .bluemix directory must contain the following files:
 
-The `.bluemix` directory contains all of the configuration files that the toolchain requires to function. At a minimum, the `.bluemix` directory must contain the following files:
-
-- `toolchain.yml`
-- `deploy.json`
-- `pipeline.yml`
+- toolchain.yml
+- deploy.json
+- pipeline.yml
 
 Detailed information regarding toolchain configuration can be found in our [docs](https://console.bluemix.net/docs/services/ContinuousDelivery/toolchains_custom.html#toolchains_custom).
 
-Update the toolchain (`.bluemix/toolchain.yml`) with your desired changes.
+1. Update the toolchain with your desired changes.
 
-Login into the IBM Cloud, substituting your own values for `<api>`, `<org>`, and `<space>`:
+2. After updating the toolchain files with your desired changes push your application to restage the toolchain
+        bx app push
 
-```bash
-ibmcloud login -a <api> -o <org> -s <space>
-```
+### Deployment
+Your application is deployed using the IBM Continuous Delivery pipeline. Your toolchain provides an integrated set of tools to build, deploy, and manage your apps.
 
-Push your application to stage the toolchain:
+#### Managing Cloud Functions and API Connect Manually
 
-```bash
-ibmcloud app push
-```
+1. Download your code locally by navigate to your App dashboard from the [Apple Development Console](https://console.bluemix.net/developer/appledevelopment/apps) or [Web Apps Console](https://console.bluemix.net/developer/appservice/apps) and select `Download Code`.
 
-### 3. Deploy your serverless application
+2. Login into the IBM Cloud
 
-Your application is deployed using the IBM Continuous Delivery pipeline. Your toolchain provides an integrated set of tools to automatically build, deploy, and manage your apps.
+        bx login -a <api> -o <org> -s <space>
 
-#### Manage Cloud Functions and API Connect Manually
+3. **Local Deployment:** Execute the deploy script.  If you're on Mac or linux, you can run the `deploy.sh` helper script.
 
-Download your code locally by navigate to your App dashboard from the [Apple Development Console](https://console.bluemix.net/developer/appledevelopment/apps) or [Web Apps Console](https://console.bluemix.net/developer/appservice/apps) and select **Download Code**.
+        chmod +x deploy.sh
+        ./deploy.sh
 
-You have the option to perform either a [Local Deployment](#local-deployment) or an [IBM DevOps deployment](#ibm-devops-deployment).
+   Or, if you'd rather run the `wskdeploy` command directly, you use the `--param` command line flags to provide values for the `services.cloudant.database` and `services.cloudant.url` values.
 
-##### Local Deployment
+        /wskdeploy -m "manifest.yml" --param "services.cloudant.url" "<url>" --param "services.cloudant.database" "products"
 
-If you're on Mac or Linux, ensure the `deploy.sh` script is executable and run it:
+   Where &lt;url&gt; is the URL value from your Cloudant service credentials.
 
-```
-chmod +x deploy.sh
-./deploy.sh
-```
+   **IBM DevOps Deployment:** Once you have connected your app to IBM Devops by clicking on the "Deploy To Cloud" you need to add your Cloudant URL to the delivery pipeline environment varaibles. Note: this is a one-time action.
 
-Or, if you'd rather run the `wskdeploy` command directly, you use the `--param` command line flags to provide values for the `services.cloudant.database` and `services.cloudant.url` values.
+   First click on the "Cloudant" service link when viewing the app dashboard.  Then click on "Service Credentials", and then click on the "View Credentials" link for your Cloudant instance.  Copy the "url" value for use in the delivery pipeline.
 
-```bash
-/wskdeploy -m "manifest.yml" --param "services.cloudant.url" "<url>" --param "services.cloudant.database" "products"
-```
+   Next, go back to your app dashboard and click "View Toolchain", then click on the "Delivery Pipeline".   The delivery pipeline may have executed without any errors, but you need to specify the Cloudant URL before the Cloud Functions actions will operate as expected.  Next, click on the gear icon for the "DEPLOY" phase, then click "Configure Phase" and click "Environment Properties".  Paste the Cloudant url for the "DATABASE_URL" environment variable.  
 
-Where `<url>` is the URL value from your Cloudant service credentials.
+   Next, run your DEPLOY phase again to complete the deployment.
 
-##### IBM DevOps Deployment
+        
+4. Review the actions in the IBM Cloud Console [Cloud Functions](https://console.bluemix.net/openwhisk/actions)
+ 
+5. Review API for the actions in the IBM Cloud Console [Cloud Functions APIs](https://console.bluemix.net/openwhisk/apimanagement)  
 
-Once you have connected your app to IBM Devops you need to add your Cloudant URL to the delivery pipeline environment variables. Note: this is a one-time action.
 
-First click on the **Cloudant** service link when viewing the app dashboard.  Then click on **Service Credentials**, and then click on the **View Credentials** link for your Cloudant instance.  Copy the `url` value for use in the delivery pipeline.
 
-Next, go back to your app dashboard and click **View Toolchain**, then click on the **Delivery Pipeline**.   The delivery pipeline may have executed without any errors, but you need to specify the Cloudant URL before the Cloud Functions actions will operate as expected.  Next, click on the gear icon for the **DEPLOY** phase, then click **Configure Phase** and click **Environment Properties**.  Paste the Cloudant URL for the `DATABASE_URL` environment variable.
+### Services
+This application is configured to connect with the following services:
 
-Next, run your **DEPLOY** phase again to complete the deployment.
-
-### 4. Integrate with your own frontend application
-
-Cloudant NoSQL DB provides access to a fully managed NoSQL JSON data layer that's always-on. This service is compatible with CouchDB, and accessible through a simple to use HTTP interface for mobile and web application models.
-
-You can then review the [Actions](https://console.bluemix.net/openwhisk/actions) in the IBM Cloud Console interface, along with your [Cloud Functions APIs](https://console.bluemix.net/openwhisk/apimanagement).
+##### Cloudant
+Cloudant NoSQL DB provides access to a fully managed NoSQL JSON data layer that's always on. This service is compatible with CouchDB, and accessible through a simple to use HTTP interface for mobile and web application models.
+  ### Cloud Function Apis
+##### Cloudant Actions
 
 <table>
   <thead>
@@ -129,8 +96,12 @@ You can then review the [Actions](https://console.bluemix.net/openwhisk/actions)
   </thead>
   <tbody>
     <tr>
+      <td colspan="3">
+      URIs relative to https://openwhiskibm.com/api/v1/web/undefined_undefined/iosserverlessexample </td>
+    </tr>
+    <tr>
       <td>Create</td>
-      <td>POST /database</td>
+      <td>POST /database </td>
       <td>Inserts an object</td>
     </tr>
     <tr>
@@ -140,7 +111,7 @@ You can then review the [Actions](https://console.bluemix.net/openwhisk/actions)
     </tr>
     <tr>
       <td>ReadAll</td>
-      <td>GET /database</td>
+      <td>GET /database </td>
       <td>Retrieves all objects</td>
     </tr>
     <tr>
@@ -150,7 +121,7 @@ You can then review the [Actions](https://console.bluemix.net/openwhisk/actions)
     </tr>
     <tr>
       <td>DeleteAll</td>
-      <td>DELETE /database</td>
+      <td>DELETE /database </td>
       <td>Deletes all objects</td>
     </tr>
     <tr>
@@ -160,7 +131,6 @@ You can then review the [Actions](https://console.bluemix.net/openwhisk/actions)
     </tr>
   </tbody>
 </table>
+  ### License
+This package contains code licensed under the Apache License, Version 2.0 (the "License"). You may obtain a copy of the License [here](http://www.apache.org/licenses/LICENSE-2.0) and may also view the License in the LICENSE file within this package.
 
-## License
-
-[Apache 2.0](LICENSE)
